@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/lightGray"
+        tools:context=".ui.fragments.recipes.RecipesFragment">
+
+        <com.todkars.shimmer.ShimmerRecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical"
+            app:shimmer_recycler_item_count="3"
+            app:shimmer_recycler_layout="@layout/placeholder_row_layout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
+            android:clickable="true"
+            app:tint="@color/white"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:src="@drawable/ic_restaurant"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/errorImageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:alpha="0.3"
+            android:src="@drawable/ic_no_internet_connection"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/recyclerView"
+            app:layout_constraintVertical_bias="0.37" />
+
+        <TextView
+            android:id="@+id/errorTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:alpha="0.3"
+            android:text="No Internet Connection."
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@+id/errorImageView"
+            app:layout_constraintStart_toStartOf="@+id/errorImageView"
+            app:layout_constraintTop_toBottomOf="@+id/errorImageView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
