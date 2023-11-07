@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="mainViewModel"
+            type="com.metehan.foodchecker.viewmodels.MainViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -40,6 +46,8 @@
 
         <ImageView
             android:id="@+id/errorImageView"
+            readApiResponse="@{mainViewModel.recipesResponse}"
+            readDatabase="@{mainViewModel.readRecipes}"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:alpha="0.3"
@@ -56,6 +64,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            readApiResponse2="@{mainViewModel.recipesResponse}"
+            readDatabase2="@{mainViewModel.readRecipes}"
             android:alpha="0.3"
             android:text="No Internet Connection."
             android:textSize="20sp"
