@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.metehan.foodchecker.viewmodels.MainViewModel
 import com.metehan.foodchecker.R
@@ -46,6 +47,10 @@ class RecipesFragment : Fragment() {
 
         setupRecyclerView()
         readDatabase()
+
+        binding.recipesFab.setOnClickListener {
+            findNavController().navigate(R.id.action_recipesFragment_to_recipesBottomSheetFragment)
+        }
         return binding.root
     }
 
@@ -93,6 +98,8 @@ class RecipesFragment : Fragment() {
                 is NetworkResult.Loading -> {
                     showShimmerEffect()
                 }
+
+                else -> {}
             }
         }
     }

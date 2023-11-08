@@ -7,4 +7,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="MyApp" parent="Theme.MaterialComponents"/>
+
 </resources>

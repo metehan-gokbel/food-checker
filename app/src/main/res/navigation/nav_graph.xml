@@ -9,7 +9,11 @@
         android:id="@+id/recipesFragment"
         android:name="com.metehan.foodchecker.ui.fragments.recipes.RecipesFragment"
         android:label="@string/recipes_fragment"
-        tools:layout="@layout/fragment_recipes" />
+        tools:layout="@layout/fragment_recipes" >
+        <action
+            android:id="@+id/action_recipesFragment_to_recipesBottomSheetFragment"
+            app:destination="@id/recipesBottomSheetFragment" />
+    </fragment>
     <fragment
         android:id="@+id/favoriteRecipes"
         android:name="com.metehan.foodchecker.ui.fragments.favorites.FavoriteRecipesFragment"
@@ -20,4 +24,13 @@
         android:name="com.metehan.foodchecker.ui.fragments.foodjoke.FoodJokeFragment"
         android:label="@string/food_joke_fragment"
         tools:layout="@layout/fragment_food_joke" />
+    <dialog
+        android:id="@+id/recipesBottomSheetFragment"
+        android:name="com.metehan.foodchecker.ui.fragments.recipes.bottomsheet.RecipesBottomSheetFragment"
+        android:label="fragment_recipes_bottom_sheet"
+        tools:layout="@layout/fragment_recipes_bottom_sheet" >
+        <action
+            android:id="@+id/action_recipesBottomSheetFragment_to_recipesFragment"
+            app:destination="@id/recipesFragment" />
+    </dialog>
 </navigation>
