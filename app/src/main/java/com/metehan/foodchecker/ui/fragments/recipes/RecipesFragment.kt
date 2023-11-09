@@ -4,31 +4,31 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.navigation.NavigationView
 import com.metehan.foodchecker.viewmodels.MainViewModel
 import com.metehan.foodchecker.R
 import com.metehan.foodchecker.adapters.RecipesAdapter
 import com.metehan.foodchecker.databinding.FragmentRecipesBinding
-import com.metehan.foodchecker.util.Constants
 import com.metehan.foodchecker.util.NetworkListener
 import com.metehan.foodchecker.util.NetworkResult
 import com.metehan.foodchecker.util.observeOnce
 import com.metehan.foodchecker.viewmodels.RecipesViewModel
-import com.metehan.foodchecker.viewmodels.UserViewModel
+import com.metehan.foodchecker.viewmodels.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class RecipesFragment : Fragment() {
+class RecipesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener{
 
     companion object {
         private const val TAG = "RecipesFragment"
@@ -40,7 +40,7 @@ class RecipesFragment : Fragment() {
     private lateinit var networkListener: NetworkListener
     private lateinit var mainViewModel: MainViewModel
     private lateinit var recipesViewModel: RecipesViewModel
-    private lateinit var userViewModel: UserViewModel
+    private lateinit var userViewModel: AuthViewModel
     private val mAdapter by lazy { RecipesAdapter() }
     private var _binding: FragmentRecipesBinding? = null
     private val binding get() = _binding!!
@@ -49,7 +49,7 @@ class RecipesFragment : Fragment() {
         super.onCreate(savedInstanceState)
         mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
         recipesViewModel = ViewModelProvider(requireActivity())[RecipesViewModel::class.java]
-        userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
+        userViewModel = ViewModelProvider(requireActivity())[AuthViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -59,6 +59,7 @@ class RecipesFragment : Fragment() {
         _binding = FragmentRecipesBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.mainViewModel = mainViewModel
+        binding.navView.setNavigationItemSelectedListener(this)
 
 //        userViewModel.readLoggedIn.observe(viewLifecycleOwner) {
 //            userViewModel.loggedIn = it
@@ -167,5 +168,9 @@ class RecipesFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        return false
     }
 }
