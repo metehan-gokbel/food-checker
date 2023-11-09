@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "820382445588",
+    "project_id": "food-checker-aa494",
+    "storage_bucket": "food-checker-aa494.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:820382445588:android:364665dc49f50e1280f701",
+        "android_client_info": {
+          "package_name": "com.metehan.foodchecker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0N6NRnDIrEqFypfSpmKCpabQutyAsUa0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
