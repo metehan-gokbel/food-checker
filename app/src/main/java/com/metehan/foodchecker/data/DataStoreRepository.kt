@@ -10,11 +10,15 @@ import androidx.datastore.preferences.emptyPreferences
 import androidx.datastore.preferences.preferencesKey
 import com.metehan.foodchecker.util.Constants.Companion.DEFAULT_DIET_TYPE
 import com.metehan.foodchecker.util.Constants.Companion.DEFAULT_MEAL_TYPE
+import com.metehan.foodchecker.util.Constants.Companion.PREFERENCES_BACK_ONLINE
 import com.metehan.foodchecker.util.Constants.Companion.PREFERENCES_DIET_TYPE
 import com.metehan.foodchecker.util.Constants.Companion.PREFERENCES_DIET_TYPE_ID
+import com.metehan.foodchecker.util.Constants.Companion.PREFERENCES_EMAIL
+import com.metehan.foodchecker.util.Constants.Companion.PREFERENCES_LOGGED_IN
 import com.metehan.foodchecker.util.Constants.Companion.PREFERENCES_MEAL_TYPE
 import com.metehan.foodchecker.util.Constants.Companion.PREFERENCES_MEAL_TYPE_ID
 import com.metehan.foodchecker.util.Constants.Companion.PREFERENCES_NAME
+import com.metehan.foodchecker.util.Constants.Companion.PREFERENCES_PASSWORD
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.Flow
@@ -27,19 +31,28 @@ import javax.inject.Inject
 @ActivityRetainedScoped
 class DataStoreRepository @Inject constructor(@ApplicationContext private val context: Context) {
 
-     private object PreferencesKeys{
-         val selectedMealType = preferencesKey<String>(PREFERENCES_MEAL_TYPE)
-         val selectedMealTypeId = preferencesKey<Int>(PREFERENCES_MEAL_TYPE_ID)
-         val selectedDietType = preferencesKey<String>(PREFERENCES_DIET_TYPE)
-         val selectedDietTypeId = preferencesKey<Int>(PREFERENCES_DIET_TYPE_ID)
-     }
+    private object PreferencesKeys {
+        val selectedMealType = preferencesKey<String>(PREFERENCES_MEAL_TYPE)
+        val selectedMealTypeId = preferencesKey<Int>(PREFERENCES_MEAL_TYPE_ID)
+        val selectedDietType = preferencesKey<String>(PREFERENCES_DIET_TYPE)
+        val selectedDietTypeId = preferencesKey<Int>(PREFERENCES_DIET_TYPE_ID)
+        val backOnline = preferencesKey<Boolean>(PREFERENCES_BACK_ONLINE)
+        val loggedIn = preferencesKey<Boolean>(PREFERENCES_LOGGED_IN)
+        val email = preferencesKey<String>(PREFERENCES_EMAIL)
+        val password = preferencesKey<String>(PREFERENCES_PASSWORD)
+    }
 
     private val dataStore: DataStore<Preferences> = context.createDataStore(
         name = PREFERENCES_NAME
     )
 
-    suspend fun saveMealAndDietType(mealType: String, mealTypeId: Int, dietType: String, dietTypeId: Int){
-        dataStore.edit {preferences->
+    suspend fun saveMealAndDietType(
+        mealType: String,
+        mealTypeId: Int,
+        dietType: String,
+        dietTypeId: Int
+    ) {
+        dataStore.edit { preferences ->
             preferences[PreferencesKeys.selectedMealType] = mealType
             preferences[PreferencesKeys.selectedMealTypeId] = mealTypeId
             preferences[PreferencesKeys.selectedDietType] = dietType
@@ -47,20 +60,41 @@ class DataStoreRepository @Inject constructor(@ApplicationContext private val co
         }
     }
 
-    val readMealAndDietType : Flow<MealAndDietType> = dataStore.data
+    suspend fun saveBackOnline(backOnline: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.backOnline] = backOnline
+        }
+    }
+
+    suspend fun saveLoggedIn(loggedIn: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.loggedIn] = loggedIn
+        }
+    }
+
+    suspend fun saveUserData(email: String, password: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.email] = email
+            preferences[PreferencesKeys.password] = password
+        }
+    }
+
+    val readMealAndDietType: Flow<MealAndDietType> = dataStore.data
         .catch { exception ->
-            if(exception is IOException){
+            if (exception is IOException) {
                 emit(emptyPreferences())
-            }else{
+            } else {
                 throw exception
             }
         }
-        .map { preferences->
+        .map { preferences ->
             // Eğer herhangi bir değer kaydedilmemişse main course'u emit et.
-            val selectedMealType = preferences[PreferencesKeys.selectedMealType] ?: DEFAULT_MEAL_TYPE
+            val selectedMealType =
+                preferences[PreferencesKeys.selectedMealType] ?: DEFAULT_MEAL_TYPE
             // Eğer herhangi bir değer kaydedilmemişse 0'ı emit et.
             val selectedMealTypeId = preferences[PreferencesKeys.selectedMealTypeId] ?: 0
-            val selectedDietType = preferences[PreferencesKeys.selectedDietType] ?: DEFAULT_DIET_TYPE
+            val selectedDietType =
+                preferences[PreferencesKeys.selectedDietType] ?: DEFAULT_DIET_TYPE
             val selectedDietTypeId = preferences[PreferencesKeys.selectedDietTypeId] ?: 0
             MealAndDietType(
                 selectedMealType,
@@ -69,6 +103,46 @@ class DataStoreRepository @Inject constructor(@ApplicationContext private val co
                 selectedDietTypeId
             )
         }
+
+    val readBackOnline: Flow<Boolean> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            val backOnline = preferences[PreferencesKeys.backOnline] ?: false
+            backOnline
+        }
+
+    val readLoggedIn: Flow<Boolean> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            val loggedIn = preferences[PreferencesKeys.loggedIn] ?: false
+            loggedIn
+        }
+
+    val readUserData: Flow<User> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            val email = preferences[PreferencesKeys.email] ?: ""
+            val password = preferences[PreferencesKeys.password] ?: ""
+            User(email, password)
+        }
 }
 
 data class MealAndDietType(
@@ -76,4 +150,9 @@ data class MealAndDietType(
     val selectedMealTypeId: Int,
     val selectedDietType: String,
     val selectedDietTypeId: Int
+)
+
+data class User(
+    val email: String,
+    val password: String
 )
