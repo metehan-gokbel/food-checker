@@ -31,8 +31,9 @@ class Constants {
         const val PREFERENCES_BACK_ONLINE = "backOnline"
 
         // Register and Login Preferences
-        const val PREFERENCES_LOGGED_IN = "loggedIn"
+        const val PREFERENCES_REMEMBER_ME = "rememberMe"
         const val PREFERENCES_EMAIL = "email"
         const val PREFERENCES_PASSWORD = "password"
+        const val PREFERENCES_LOGGED_IN = "loggedIn"
     }
 }

@@ -7,7 +7,10 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -61,13 +64,16 @@ class RecipesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListe
         binding.mainViewModel = mainViewModel
         binding.navView.setNavigationItemSelectedListener(this)
 
-//        userViewModel.readLoggedIn.observe(viewLifecycleOwner) {
-//            userViewModel.loggedIn = it
-//            println("Logged In: $it")
-//            if(it.equals(false)){
-//                findNavController().navigate(R.id.action_recipesFragment_to_loginFragment)
-//            }
-//        }
+        val toggle = ActionBarDrawerToggle(requireActivity(), binding.drawerLayout, binding.toolbar, R.string.open_nav, R.string.close_nav)
+        binding.drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+
+        val header = binding.navView.getHeaderView(0)
+        val emailTextView = header.findViewById<TextView>(R.id.email_text_view)
+
+        userViewModel.readUser.observe(viewLifecycleOwner) {
+            emailTextView.text = it.email
+        }
 
         setupRecyclerView()
 
@@ -171,6 +177,14 @@ class RecipesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListe
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        return false
+        when(item.itemId){
+            R.id.nav_logout -> {
+                userViewModel.logOut()
+                userViewModel.saveRememberMe(false)
+                requireActivity().finish()
+            }
+        }
+        binding.drawerLayout.closeDrawer(GravityCompat.START)
+        return true
     }
 }

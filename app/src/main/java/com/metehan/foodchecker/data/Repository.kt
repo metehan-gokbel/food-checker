@@ -8,9 +8,7 @@ import javax.inject.Inject
 class Repository @Inject constructor(
     remoteDataSource: RemoteDataSource,
     localDataSource: LocalDataSource,
-    firebaseAuth: FirebaseAuth
 ) {
     val remote = remoteDataSource
     val local = localDataSource
-    val firebase = firebaseAuth
 }

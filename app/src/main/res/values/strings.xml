@@ -38,4 +38,7 @@
     <string name="already_an_account_login">Already an account? Login</string>
     <string name="login">Login</string>
     <string name="not_yet_registered_sign_up">Not yet registered? Sign up</string>
+    <string name="open_nav">Open Navigation Drawer</string>
+    <string name="close_nav">Close Navigation Drawer</string>
+    <string name="remember_me">Remember Me</string>
 </resources>

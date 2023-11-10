@@ -8,6 +8,7 @@ import androidx.datastore.preferences.createDataStore
 import androidx.datastore.preferences.edit
 import androidx.datastore.preferences.emptyPreferences
 import androidx.datastore.preferences.preferencesKey
+import com.google.firebase.auth.FirebaseAuth
 import com.metehan.foodchecker.util.Constants.Companion.DEFAULT_DIET_TYPE
 import com.metehan.foodchecker.util.Constants.Companion.DEFAULT_MEAL_TYPE
 import com.metehan.foodchecker.util.Constants.Companion.PREFERENCES_BACK_ONLINE
@@ -19,6 +20,7 @@ import com.metehan.foodchecker.util.Constants.Companion.PREFERENCES_MEAL_TYPE
 import com.metehan.foodchecker.util.Constants.Companion.PREFERENCES_MEAL_TYPE_ID
 import com.metehan.foodchecker.util.Constants.Companion.PREFERENCES_NAME
 import com.metehan.foodchecker.util.Constants.Companion.PREFERENCES_PASSWORD
+import com.metehan.foodchecker.util.Constants.Companion.PREFERENCES_REMEMBER_ME
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.Flow
@@ -29,7 +31,12 @@ import javax.inject.Inject
 
 // Bu class daha sonra RecipesViewModel içerisinde kullanılacağı için @ActivityRetainedScoped ekledik.
 @ActivityRetainedScoped
-class DataStoreRepository @Inject constructor(@ApplicationContext private val context: Context) {
+class DataStoreRepository @Inject constructor(
+    @ApplicationContext private val context: Context,
+    firebaseAuth: FirebaseAuth
+) {
+
+    val firebase = firebaseAuth
 
     private object PreferencesKeys {
         val selectedMealType = preferencesKey<String>(PREFERENCES_MEAL_TYPE)
@@ -37,9 +44,10 @@ class DataStoreRepository @Inject constructor(@ApplicationContext private val co
         val selectedDietType = preferencesKey<String>(PREFERENCES_DIET_TYPE)
         val selectedDietTypeId = preferencesKey<Int>(PREFERENCES_DIET_TYPE_ID)
         val backOnline = preferencesKey<Boolean>(PREFERENCES_BACK_ONLINE)
-        val loggedIn = preferencesKey<Boolean>(PREFERENCES_LOGGED_IN)
+        val rememberMe = preferencesKey<Boolean>(PREFERENCES_REMEMBER_ME)
         val email = preferencesKey<String>(PREFERENCES_EMAIL)
         val password = preferencesKey<String>(PREFERENCES_PASSWORD)
+        val loggedIn = preferencesKey<Boolean>(PREFERENCES_LOGGED_IN)
     }
 
     private val dataStore: DataStore<Preferences> = context.createDataStore(
@@ -72,7 +80,13 @@ class DataStoreRepository @Inject constructor(@ApplicationContext private val co
         }
     }
 
-    suspend fun saveUserData(email: String, password: String) {
+    suspend fun saveRememberMe(rememberMe: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.rememberMe] = rememberMe
+        }
+    }
+
+    suspend fun saveUser(email: String, password: String) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.email] = email
             preferences[PreferencesKeys.password] = password
@@ -117,6 +131,19 @@ class DataStoreRepository @Inject constructor(@ApplicationContext private val co
             backOnline
         }
 
+    val readRememberMe: Flow<Boolean> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            val rememberMe = preferences[PreferencesKeys.rememberMe] ?: false
+            rememberMe
+        }
+
     val readLoggedIn: Flow<Boolean> = dataStore.data
         .catch { exception ->
             if (exception is IOException) {
@@ -130,7 +157,7 @@ class DataStoreRepository @Inject constructor(@ApplicationContext private val co
             loggedIn
         }
 
-    val readUserData: Flow<User> = dataStore.data
+    val readUser: Flow<User> = dataStore.data
         .catch { exception ->
             if (exception is IOException) {
                 emit(emptyPreferences())

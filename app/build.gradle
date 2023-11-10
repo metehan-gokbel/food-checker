@@ -116,4 +116,7 @@ dependencies {
 
     // Firebase Auth
     implementation 'com.google.firebase:firebase-auth:22.2.0'
+
+    // Splash Screen
+    implementation 'androidx.core:core-splashscreen:1.0.1'
 }
