@@ -2,8 +2,9 @@ package com.metehan.foodchecker.ui.fragments.recipes
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -11,27 +12,32 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
-import com.metehan.foodchecker.viewmodels.MainViewModel
 import com.metehan.foodchecker.R
 import com.metehan.foodchecker.adapters.RecipesAdapter
 import com.metehan.foodchecker.databinding.FragmentRecipesBinding
 import com.metehan.foodchecker.util.NetworkListener
 import com.metehan.foodchecker.util.NetworkResult
 import com.metehan.foodchecker.util.observeOnce
-import com.metehan.foodchecker.viewmodels.RecipesViewModel
 import com.metehan.foodchecker.viewmodels.AuthViewModel
+import com.metehan.foodchecker.viewmodels.MainViewModel
+import com.metehan.foodchecker.viewmodels.RecipesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
+import com.metehan.foodchecker.ui.MainActivity
+
 
 @AndroidEntryPoint
-class RecipesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener{
+class RecipesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener,
+    SearchView.OnQueryTextListener {
 
     companion object {
         private const val TAG = "RecipesFragment"
@@ -62,9 +68,19 @@ class RecipesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListe
         _binding = FragmentRecipesBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.mainViewModel = mainViewModel
+        val toolbar: Toolbar = binding.toolbar
+        (requireActivity() as MainActivity).setSupportActionBar(toolbar)
+
+        setHasOptionsMenu(true)
         binding.navView.setNavigationItemSelectedListener(this)
 
-        val toggle = ActionBarDrawerToggle(requireActivity(), binding.drawerLayout, binding.toolbar, R.string.open_nav, R.string.close_nav)
+        val toggle = ActionBarDrawerToggle(
+            requireActivity(),
+            binding.drawerLayout,
+            binding.toolbar,
+            R.string.open_nav,
+            R.string.close_nav
+        )
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
@@ -109,6 +125,13 @@ class RecipesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListe
         showShimmerEffect()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.recipes_menu, menu)
+        val search = menu.findItem(R.id.menu_search)
+        val searchView = search.actionView as? SearchView
+        searchView?.isSubmitButtonEnabled = true
+        searchView?.setOnQueryTextListener(this)
+    }
 
     private fun readDatabase() {
         lifecycleScope.launch {
@@ -153,6 +176,35 @@ class RecipesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListe
         }
     }
 
+    private fun searchApiData(searchQuery: String) {
+        showShimmerEffect()
+        mainViewModel.searchRecipes(recipesViewModel.applySearchQuery(searchQuery))
+        mainViewModel.searchedRecipesResponse.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is NetworkResult.Success -> {
+                    hideShimmerEffect()
+                    val foodRecipe = response.data
+                    foodRecipe?.let { mAdapter.setData(it) }
+                }
+
+                is NetworkResult.Error -> {
+                    hideShimmerEffect()
+                    loadDataFromCache()
+                    Toast.makeText(
+                        requireContext(),
+                        response.message.toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                is NetworkResult.Loading -> {
+                    showShimmerEffect()
+                }
+            }
+        }
+    }
+
+
     private fun loadDataFromCache() {
         lifecycleScope.launch {
             mainViewModel.readRecipes.observe(viewLifecycleOwner) { database ->
@@ -176,15 +228,32 @@ class RecipesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListe
         _binding = null
     }
 
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        if(!query.isNullOrEmpty()){
+            searchApiData(query)
+        }
+        return true
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        return true
+    }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        when (item.itemId) {
             R.id.nav_logout -> {
                 userViewModel.logOut()
                 userViewModel.saveRememberMe(false)
                 requireActivity().finish()
             }
+
+            R.id.menu_search -> {
+
+            }
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
+
 }
