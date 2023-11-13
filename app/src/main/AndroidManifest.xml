@@ -17,6 +17,11 @@
         android:theme="@style/Theme.FoodChecker"
         tools:targetApi="31">
         <activity
+            android:name=".ui.DetailsActivity"
+            android:theme="@style/DetailsActivityStyle"
+            android:label="Details"
+            android:exported="false" />
+        <activity
             android:name=".ui.MainActivity"
             android:exported="false" />
         <activity
@@ -27,8 +32,8 @@
             android:exported="false" />
         <activity
             android:name=".ui.auth.SplashScreenActivity"
-            android:theme="@style/SplashScreenTheme"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

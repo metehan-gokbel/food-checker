@@ -42,4 +42,7 @@
     <string name="close_nav">Close Navigation Drawer</string>
     <string name="remember_me">Remember Me</string>
     <string name="search">Search</string>
+    <string name="cheap">Cheap</string>
+    <string name="dairy_free">Dairy Free</string>
+    <string name="healthy">Healthy</string>
 </resources>

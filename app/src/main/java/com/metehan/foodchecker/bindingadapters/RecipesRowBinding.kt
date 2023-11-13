@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import coil.load
 import com.metehan.foodchecker.R
+import org.jsoup.Jsoup
 
 class RecipesRowBinding {
     companion object{
@@ -53,6 +54,15 @@ class RecipesRowBinding {
                         )
                     }
                 }
+            }
+        }
+
+        @BindingAdapter("parseHtml")
+        @JvmStatic
+        fun parseHtml(textView: TextView, description: String?){
+            if(!description.isNullOrEmpty()){
+                val desc = Jsoup.parse(description).text()
+                textView.text = desc
             }
         }
     }
