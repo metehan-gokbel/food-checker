@@ -10,12 +10,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.metehan.foodchecker.data.Repository
-import com.metehan.foodchecker.data.database.RecipesEntity
+import com.metehan.foodchecker.data.database.entities.FavouritesEntity
+import com.metehan.foodchecker.data.database.entities.RecipesEntity
 import com.metehan.foodchecker.models.FoodRecipe
 import com.metehan.foodchecker.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.lang.Exception
@@ -29,11 +29,28 @@ class MainViewModel @Inject constructor(
 
     // #todo LOCAL
 
-    val readRecipes: LiveData<List<RecipesEntity>> = repository.local.readDatabase().asLiveData()
+    val readRecipes: LiveData<List<RecipesEntity>> = repository.local.readRecipes().asLiveData()
+    val readFavouriteRecipes: LiveData<List<FavouritesEntity>> =
+        repository.local.readFavouriteRecipes().asLiveData()
 
     private fun insertRecipes(recipesEntity: RecipesEntity) =
         viewModelScope.launch(Dispatchers.IO) {
             repository.local.insertRecipes(recipesEntity)
+        }
+
+    fun insertFavouriteRecipe(favouritesEntity: FavouritesEntity) =
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.local.insertFavouriteRecipes(favouritesEntity)
+        }
+
+    fun deleteFavouriteRecipe(favouritesEntity: FavouritesEntity) =
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.local.deleteFavouriteRecipe(favouritesEntity)
+        }
+
+    private fun deleteAllFavouriteRecipes() =
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.local.deleteAllFavouriteRecipes()
         }
 
     // #todo REMOTE

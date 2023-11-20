@@ -2,11 +2,8 @@ package com.metehan.foodchecker.ui.auth
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageView
-import com.metehan.foodchecker.R
-import com.metehan.foodchecker.databinding.ActivityLoginBinding
+import androidx.appcompat.app.AppCompatActivity
 import com.metehan.foodchecker.databinding.ActivitySplashScreenBinding
 
 @SuppressLint("CustomSplashScreen")
@@ -17,6 +14,15 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val fromMainActivity = intent.getBooleanExtra("fromMainActivity", false)
+        if (fromMainActivity) {
+            finishAffinity()
+            val homeIntent = Intent(Intent.ACTION_MAIN)
+            homeIntent.addCategory(Intent.CATEGORY_HOME)
+            homeIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(homeIntent)
+        }
     }
 
     override fun onResume() {

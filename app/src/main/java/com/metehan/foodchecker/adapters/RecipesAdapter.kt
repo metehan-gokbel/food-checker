@@ -2,6 +2,7 @@ package com.metehan.foodchecker.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.metehan.foodchecker.databinding.RecipesRowLayoutBinding
@@ -55,5 +56,9 @@ class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.MyViewHolder>() {
         val diffUtilResult = DiffUtil.calculateDiff(recipesDiffUtil)
         recipes = newData.results
         diffUtilResult.dispatchUpdatesTo(this)
+    }
+
+    fun getData(): List<Result>{
+        return recipes
     }
 }

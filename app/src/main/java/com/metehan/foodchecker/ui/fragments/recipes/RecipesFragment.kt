@@ -92,7 +92,6 @@ class RecipesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListe
         }
 
         setupRecyclerView()
-
         recipesViewModel.readBackOnline.observe(viewLifecycleOwner) {
             recipesViewModel.backOnline = it
         }
@@ -225,12 +224,12 @@ class RecipesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListe
 
     override fun onDestroy() {
         super.onDestroy()
+        requireActivity().finish()
         _binding = null
     }
 
-
     override fun onQueryTextSubmit(query: String?): Boolean {
-        if(!query.isNullOrEmpty()){
+        if (!query.isNullOrEmpty()) {
             searchApiData(query)
         }
         return true
@@ -255,5 +254,4 @@ class RecipesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListe
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
-
 }

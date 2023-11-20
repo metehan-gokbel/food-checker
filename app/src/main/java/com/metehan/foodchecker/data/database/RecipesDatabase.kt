@@ -3,9 +3,11 @@ package com.metehan.foodchecker.data.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.metehan.foodchecker.data.database.entities.FavouritesEntity
+import com.metehan.foodchecker.data.database.entities.RecipesEntity
 
 @Database(
-    entities = [RecipesEntity::class],
+    entities = [RecipesEntity::class, FavouritesEntity::class],
     version = 1,
     exportSchema = false
 )

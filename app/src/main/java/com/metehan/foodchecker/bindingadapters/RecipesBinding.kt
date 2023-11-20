@@ -6,12 +6,11 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import androidx.navigation.findNavController
-import com.metehan.foodchecker.data.database.RecipesEntity
+import com.metehan.foodchecker.data.database.entities.RecipesEntity
 import com.metehan.foodchecker.models.FoodRecipe
 import com.metehan.foodchecker.models.Result
 import com.metehan.foodchecker.ui.fragments.recipes.RecipesFragmentDirections
 import com.metehan.foodchecker.util.NetworkResult
-import retrofit2.Response
 import java.lang.Exception
 
 class RecipesBinding {

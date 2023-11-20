@@ -79,9 +79,9 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.7.4'
 
     // Room components
-    implementation "androidx.room:room-runtime:2.5.2"
-    kapt "androidx.room:room-compiler:2.5.2"
-    implementation "androidx.room:room-ktx:2.5.2"
+    implementation "androidx.room:room-runtime:2.6.0"
+    kapt "androidx.room:room-compiler:2.6.0"
+    implementation "androidx.room:room-ktx:2.6.0"
 
     // DataStore
     implementation "androidx.datastore:datastore-preferences:1.0.0-alpha02"

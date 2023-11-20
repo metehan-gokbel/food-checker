@@ -1,15 +1,17 @@
 package com.metehan.foodchecker.ui
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.metehan.foodchecker.R
 import com.metehan.foodchecker.databinding.ActivityMainBinding
+import com.metehan.foodchecker.ui.auth.SplashScreenActivity
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -36,5 +38,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, SplashScreenActivity::class.java)
+        intent.putExtra("fromMainActivity", true)
+        startActivity(intent)
+        finish() // MainActivity'yi kapat
     }
 }

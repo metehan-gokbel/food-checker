@@ -1,4 +1,4 @@
-package com.metehan.foodchecker.data.database
+package com.metehan.foodchecker.data.database.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

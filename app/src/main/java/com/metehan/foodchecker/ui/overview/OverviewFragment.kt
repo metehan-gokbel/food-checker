@@ -11,6 +11,7 @@ import com.metehan.foodchecker.R
 import com.metehan.foodchecker.databinding.FragmentOverviewBinding
 import com.metehan.foodchecker.databinding.FragmentRecipesBinding
 import com.metehan.foodchecker.models.Result
+import com.metehan.foodchecker.util.Constants.Companion.RECIPE_RESULT_KEY
 import org.jsoup.Jsoup
 
 class OverviewFragment : Fragment() {
@@ -25,7 +26,7 @@ class OverviewFragment : Fragment() {
         _binding = FragmentOverviewBinding.inflate(inflater, container, false)
 
         val args = arguments
-        val myBundle: Result? = args?.getParcelable("recipeBundle")
+        val myBundle: Result? = args?.getParcelable(RECIPE_RESULT_KEY)
 
         binding.mainImageView.load(myBundle?.image)
         binding.titleTextView.text = myBundle?.title
