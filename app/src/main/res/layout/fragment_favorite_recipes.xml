@@ -9,9 +9,9 @@
             name="mainViewModel"
             type="com.metehan.foodchecker.viewmodels.MainViewModel" />
 
-<!--        <variable-->
-<!--            name="mAdapter"-->
-<!--            type="com.example.foody.adapters.FavoriteRecipesAdapter" />-->
+        <variable
+            name="mAdapter"
+            type="com.metehan.foodchecker.adapters.FavouriteRecipesAdapter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,6 +23,8 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/favoriteRecipesRecyclerView"
+            setData="@{mAdapter}"
+            viewVisibility="@{mainViewModel.readFavouriteRecipes}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="8dp"
@@ -35,9 +37,11 @@
 
         <ImageView
             android:id="@+id/no_data_imageView"
+            viewVisibility="@{mainViewModel.readFavouriteRecipes}"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:alpha="0.5"
+            android:src="@drawable/ic_restaurant"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -48,10 +52,12 @@
 
         <TextView
             android:id="@+id/no_data_textView"
+            viewVisibility="@{mainViewModel.readFavouriteRecipes}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:alpha="0.5"
+            android:text="@string/no_favourite_recipes"
             android:textSize="18sp"
             android:textStyle="bold"
             android:visibility="invisible"
